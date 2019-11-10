@@ -1,4 +1,5 @@
 ### 项目介绍
+
 此项目为 **个人练习**项目。   
 
 项目基于 django 2.2，结合 Channels 和 Celery实现 与前台进行 websocket 实时通信和异步执行任务。   

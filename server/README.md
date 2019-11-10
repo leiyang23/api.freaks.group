@@ -1,4 +1,5 @@
 ### 部署
+
 #### nginx   
 nginx 的管理使用 宝塔面板。
 
@@ -12,8 +13,12 @@ Centos 下直接 `yum install supervisor`，其配置文件 /etc/supervisord.con
 `pip3 install uwsgi` `pip3 install daphne`。   
 安装后的启动命令在 /usr/local/python3/bin/ 目录下。 
 
-3. 配置
-程序的配置在 supervisor 的配置文件中以 includes 的形式导入，因此只需将程序的配置文件地址注册到 supervisor的配置文件中就可以了。  
+3. daphne 管理   
+程序的配置在 supervisor 的配置文件中以 includes 的形式导入，因此只需将程序的配置文件地址注册到 supervisor的配置文件中就可以了。
+
+4. uWSGI 管理   
+直接使用 `/usr/local/python3/bin/uwsgi -i path/to/ini`   
+杀死程序：`killall -9 uwsgi3`
 
 #### celery  
 1. 注册服务  

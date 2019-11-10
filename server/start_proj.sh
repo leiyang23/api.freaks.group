@@ -1,5 +1,5 @@
 #!/usr/bin bash
-echo "正在重启项目。。。"
+echo "正在启动项目。。。"
 
 echo "web 服务器启动。。。"
 supervisorctl start uwsgi;

@@ -2,7 +2,10 @@
 echo "正在启动项目。。。"
 
 echo "web 服务器启动。。。"
-supervisorctl start uwsgi;
+killall -9 uwsgi3;
+killall -9 uwsgi3;
+killall -9 uwsgi3;
+uwsgi3 -i /www/wwwroot/api.freaks.group/server/uwsgi.ini;
 supervisorctl start daphne;
 echo "web 服务器已启动"
 

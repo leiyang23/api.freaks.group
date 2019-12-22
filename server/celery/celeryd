@@ -1,5 +1,5 @@
 CELERYD_NODES="worker1"
-CELERY_BIN="/usr/local/python3/bin/"
+CELERY_BIN="/usr/local/python3/bin/celery"
 CELERY_APP="django_proj.celery:app"
 CELERYD_CHDIR="/www/wwwroot/api.freaks.group/django_proj/"
 CELERYD_OPTS="--time-limit=300 --concurrency=1"

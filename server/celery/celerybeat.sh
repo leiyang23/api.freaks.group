@@ -67,21 +67,17 @@ _config_sanity() {
     fi
 }
 
-scripts="./celerybeat"
+scripts="/www/wwwroot/api.freaks.group/server/celery/celeryd"
+_config_sanity "$scripts"
+. "$scripts"
 
 
-_config_sanity ./celeryd
-. ./celeryd
+EXTRA_CONFIG="/www/wwwroot/api.freaks.group/server/celery/celerybeat"
+_config_sanity "$EXTRA_CONFIG"
+. "$EXTRA_CONFIG"
 
 
-EXTRA_CONFIG="./celerybeat"
-if test -f "$EXTRA_CONFIG"; then
-    scripts="$scripts, $EXTRA_CONFIG"
-    _config_sanity "$EXTRA_CONFIG"
-    . "$EXTRA_CONFIG"
-fi
-
-echo "Using configuration: $scripts"
+echo "beat start: $scripts,$EXTRA_CONFIG"
 
 CELERY_BIN=${CELERY_BIN:-"celery"}
 DEFAULT_USER="celery"

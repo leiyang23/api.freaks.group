@@ -5,7 +5,7 @@ from qiniu import Auth
 from django.http import JsonResponse
 
 
-bucket_name = "imgur"
+bucket_name = "imgur001"
 access_key = 'ifQf2JhtpIsK354ZT69bKbMtBPsDzNlQNizohXHm'
 secret_key = 'GxBrXLvPiMxls5cqdOdorlwtBW42OulonwMsIHFd'
 

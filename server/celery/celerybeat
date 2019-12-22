@@ -1,0 +1,4 @@
+CELERYBEAT_CHDIR="/www/wwwroot/api.freaks.group/django_proj/"
+
+CELERYBEAT_OPTS="--schedule=/www/wwwroot/api.freaks.grop/django_proj/celery-runtime-files/celerybeat-schedule"
+CELERYBEAT_LOG_FILE="/www/wwwroot/api.freaks.grop/django_proj/celery-runtime-files/beat.log"

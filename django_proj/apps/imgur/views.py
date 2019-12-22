@@ -1,19 +1,19 @@
 import requests
-from qiniu import Auth
 import datetime
+from qiniu import Auth
 
 from django.http import JsonResponse
 
 
-# Create your views here.
+bucket_name = "imgur"
+access_key = 'ifQf2JhtpIsK354ZT69bKbMtBPsDzNlQNizohXHm'
+secret_key = 'GxBrXLvPiMxls5cqdOdorlwtBW42OulonwMsIHFd'
+
+
 def get_token(name):
     """返回七牛云上传token"""
 
-    access_key = 'ifQf2JhtpIsK354ZT69bKbMtBPsDzNlQNizohXHm'
-    secret_key = 'GxBrXLvPiMxls5cqdOdorlwtBW42OulonwMsIHFd'
     q = Auth(access_key, secret_key)
-
-    bucket_name = 'test'
 
     key = name
     # 生成上传 Token，可以指定过期时间等
@@ -42,6 +42,7 @@ def up_tokens(request):
     tokens = []
     for file_name in file_name_list:
         tokens.append(get_token(file_name))
+
     return JsonResponse({
         "status_code": 200,
         "data": tokens
@@ -50,20 +51,18 @@ def up_tokens(request):
 
 def qiniu_data_statistic(request):
     """七牛云接口统计"""
+    today = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+    yesterday = (datetime.datetime.now() - datetime.timedelta(days=1)).strftime("%Y%m%d%H%M%S")
+
+    q = Auth(access_key, secret_key)
 
     res = {
         "space": 0,
         "count": 0
     }
-    today = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
-    yesterday = (datetime.datetime.now() - datetime.timedelta(days=1)).strftime("%Y%m%d%H%M%S")
-    access_key = 'ifQf2JhtpIsK354ZT69bKbMtBPsDzNlQNizohXHm'
-    secret_key = 'GxBrXLvPiMxls5cqdOdorlwtBW42OulonwMsIHFd'
-    q = Auth(access_key, secret_key)
-
     for i in res:
-        url = f'http://api.qiniu.com/v6/{i}?bucket=test&begin={yesterday}&end={today}&g=day'
-        access_token = q.token_of_request(url=url) # 管理凭证
+        url = f'http://api.qiniu.com/v6/{i}?bucket={bucket_name}&begin={yesterday}&end={today}&g=day'
+        access_token = q.token_of_request(url=url)  # 管理凭证
 
         headers = {
             "Authorization": "QBox " + access_token
@@ -71,6 +70,7 @@ def qiniu_data_statistic(request):
 
         resp = requests.get(url, headers=headers).json()
         res[i] = resp['datas'][-1]
+
     return JsonResponse({
         "status_code": 200,
         "data": res

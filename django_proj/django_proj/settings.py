@@ -21,6 +21,7 @@ INSTALLED_APPS = [
     'user',
     'imgur',
     'monitor',
+    "ai",
 ]
 
 MIDDLEWARE = [

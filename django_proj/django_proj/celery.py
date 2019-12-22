@@ -1,5 +1,6 @@
 import os
 from celery import Celery
+from celery.schedules import crontab
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'django_proj.settings')
 
@@ -23,4 +24,8 @@ app.conf.beat_schedule = {
         'args': ("api.freaks.group",),
         'kwargs': {'port': 80}
     },
+    'reset-baidu-api-times': {
+        "task": 'ai.tasks.reset_api_times',
+        "schedule": crontab(hour=0, minute=0)
+    }
 }

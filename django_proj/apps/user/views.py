@@ -1,4 +1,5 @@
 import redis
+import random
 
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
@@ -7,7 +8,7 @@ from django.contrib.auth import get_user_model
 from django.conf import settings
 
 from .forms import RegisterUserForm, LoginUserForm, RegisterEmailForm, RetrieveForm
-from .tasks import send_active_email
+from celery_proj.tasks.common import send_email
 
 UserModel = get_user_model()
 
@@ -22,7 +23,16 @@ def register_email_code(request):
             "msg": form.errors.as_json()
         })
     email = form.cleaned_data['email']
-    send_active_email.delay(email)
+
+    # 异步发送邮箱验证码
+    subject = "邮箱验证"
+    code = ''.join(random.choices('0123456789', k=4))
+    message = f"激活码：{code}，15分钟内有效。"
+    send_email.delay([email],subject,message)
+
+    r = redis.Redis(host=settings.REDIS_HOST, db=9)
+    r.set(email, code, ex=60 * 15)
+
     return JsonResponse({
         "status_code": 200,
         "msg": "已发送，请查收"

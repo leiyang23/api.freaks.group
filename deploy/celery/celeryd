@@ -1,0 +1,10 @@
+CELERYD_NODES="worker1"
+CELERY_BIN="/usr/local/python3/bin/celery"
+CELERY_APP="celery_proj.app:app"
+CELERYD_CHDIR="/home/api.freaks.group/django_proj/"
+CELERYD_OPTS="--time-limit=300 --concurrency=1"
+CELERYD_LOG_FILE="/home/api.freaks.group/django_proj/celery_proj/celery-runtime-files/%n%I.log"
+CELERYD_PID_FILE="/home/api.freaks.group/django_proj/celery_proj/celery-runtime-files/%n.pid"
+CELERYD_USER="root"
+CELERYD_GROUP="root"
+CELERY_CREATE_DIRS=1

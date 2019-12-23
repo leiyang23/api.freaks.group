@@ -48,7 +48,7 @@
                 }
             }
         },
-        // Return the current time while accounting for the server timezone.
+        // Return the current time while accounting for the deploy timezone.
         now: function() {
             var body = document.getElementsByTagName('body')[0];
             var serverOffset = body.getAttribute('data-admin-utc-offset');
@@ -79,16 +79,16 @@
             var message;
             if (timezoneOffset > 0) {
                 message = ngettext(
-                    'Note: You are %s hour ahead of server time.',
-                    'Note: You are %s hours ahead of server time.',
+                    'Note: You are %s hour ahead of deploy time.',
+                    'Note: You are %s hours ahead of deploy time.',
                     timezoneOffset
                 );
             }
             else {
                 timezoneOffset *= -1;
                 message = ngettext(
-                    'Note: You are %s hour behind server time.',
-                    'Note: You are %s hours behind server time.',
+                    'Note: You are %s hour behind deploy time.',
+                    'Note: You are %s hours behind deploy time.',
                     timezoneOffset
                 );
             }

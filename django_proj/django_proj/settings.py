@@ -3,6 +3,7 @@ import sys
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
+sys.path.insert(1, os.path.join(BASE_DIR, 'celery_proj'))
 
 SECRET_KEY = 'a_)p&o@#%7@mh$$2ncu_^5tr&as&ap_04i5m*w$p#wdi%r=+m@'
 
@@ -101,10 +102,8 @@ EMAIL_HOST_USER = 'leiyang_ace@163.com'  # 帐号
 EMAIL_HOST_PASSWORD = '1005931665sqm'  # 密码
 DEFAULT_FROM_EMAIL = SERVER_EMAIL = EMAIL_HOST_USER
 
-# 配置 Celery
-REDIS_HOST = '47.111.175.222'
-CELERY_BROKER_URL = f"redis://{REDIS_HOST}:6379/9"
-CELERY_RESULT_BACKEND = f'redis://{REDIS_HOST}:6379/9'
+# redis
+REDIS_HOST = '127.0.0.1' if DEBUG  else '47.111.175.222'
 
 # Channels 配置
 ASGI_APPLICATION = "django_proj.routing.application"

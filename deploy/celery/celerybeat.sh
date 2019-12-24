@@ -22,7 +22,7 @@ else
 fi
 SCRIPT_NAME="$(basename "$SCRIPT_FILE")"
 
-# /etc/init.d/celerybeat: start and stop the celery periodic task scheduler daemon.
+# /etc/init.d/celerybeat_conf: start and stop the celery periodic task scheduler daemon.
 
 # Make sure executable configuration script is owned by root
 _config_sanity() {
@@ -67,12 +67,12 @@ _config_sanity() {
     fi
 }
 
-scripts="/home/api.freaks.group/deploy/celery/celeryd"
+scripts="/home/api.freaks.group/deploy/celery/celeryd_conf"
 _config_sanity "$scripts"
 . "$scripts"
 
 
-EXTRA_CONFIG="/home/api.freaks.group/deploy/celery/celerybeat"
+EXTRA_CONFIG="/home/api.freaks.group/deploy/celery/celerybeat_conf"
 _config_sanity "$EXTRA_CONFIG"
 . "$EXTRA_CONFIG"
 

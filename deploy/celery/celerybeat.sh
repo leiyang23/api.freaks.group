@@ -67,12 +67,12 @@ _config_sanity() {
     fi
 }
 
-scripts="/www/wwwroot/api.freaks.group/server/celery/celeryd"
+scripts="./celeryd"
 _config_sanity "$scripts"
 . "$scripts"
 
 
-EXTRA_CONFIG="/www/wwwroot/api.freaks.group/server/celery/celerybeat"
+EXTRA_CONFIG="./celerybeat"
 _config_sanity "$EXTRA_CONFIG"
 . "$EXTRA_CONFIG"
 

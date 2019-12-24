@@ -4,7 +4,7 @@ echo "正在启动项目。。。"
 
 if [ !  -f /etc/supervisord/daphne.ini ];then
   cp supervisord/daphne.ini /etc/supervisord.d/daphne.ini
-  supervisord -c /etc/supervisord.conf
+  supervisorctl update
 fi
 
 echo "web 服务器启动。。。"

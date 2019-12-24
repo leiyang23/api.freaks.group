@@ -2,7 +2,7 @@
 echo "正在启动项目。。。"
 # yum install -y supervisor
 
-if [ !  -f /etc/supervisord/daphne.ini ]:then
+if [ !  -f /etc/supervisord/daphne.ini ];then
   cp supervisord/daphne.ini /etc/supervisord/daphne.ini
   supervisord -c /etc/supervisord.conf
 fi

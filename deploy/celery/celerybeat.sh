@@ -67,12 +67,12 @@ _config_sanity() {
     fi
 }
 
-scripts="./celeryd"
+scripts="/home/api.freaks.group/deploy/celery/celeryd"
 _config_sanity "$scripts"
 . "$scripts"
 
 
-EXTRA_CONFIG="./celerybeat"
+EXTRA_CONFIG="/home/api.freaks.group/deploy/celery/celerybeat"
 _config_sanity "$EXTRA_CONFIG"
 . "$EXTRA_CONFIG"
 

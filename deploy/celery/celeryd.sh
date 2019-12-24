@@ -29,7 +29,7 @@ DEFAULT_LOG_LEVEL="INFO"
 DEFAULT_NODES="celery"
 DEFAULT_CELERYD="-m celery worker --detach"
 
-CELERY_DEFAULTS="./celeryd"
+CELERY_DEFAULTS="/home/api.freaks.group/deploy/celery/celeryd"
 
 # Make sure executable configuration script is owned by root
 _config_sanity() {

@@ -3,8 +3,8 @@ from celery.schedules import crontab
 
 from celery_proj import settings
 
-app = Celery('celery', broker=f"redis://{settings.REDIS_HOST}:6379/9",
-             backend=f"redis://{settings.REDIS_HOST}:6379/9",
+app = Celery('celery', broker=f"redis://:{settings.REDIS_PWD}@{settings.REDIS_HOST}:6379/9",
+             backend=f"redis://:{settings.REDIS_PWD}@{settings.REDIS_HOST}:6379/9",
              include=['celery_proj.tasks.common', "celery_proj.weather.tasks"])
 
 # 定时任务

@@ -7,7 +7,7 @@ sys.path.insert(1, os.path.join(BASE_DIR, 'celery_proj'))
 
 SECRET_KEY = 'a_)p&o@#%7@mh$$2ncu_^5tr&as&ap_04i5m*w$p#wdi%r=+m@'
 
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -104,6 +104,7 @@ DEFAULT_FROM_EMAIL = SERVER_EMAIL = EMAIL_HOST_USER
 
 # redis
 REDIS_HOST = '127.0.0.1' if DEBUG  else '47.111.175.222'
+REDIS_PWD = "fuckyou!"
 
 # Channels 配置
 ASGI_APPLICATION = "django_proj.routing.application"

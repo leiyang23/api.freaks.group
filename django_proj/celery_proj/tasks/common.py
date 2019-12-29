@@ -11,7 +11,7 @@ from celery_proj.app import app
 @app.task()
 def reset_api_times():
     """定时任务：每天凌晨清除百度云接口调用量"""
-    with redis.Redis(host=settings.REDIS_HOST, db=9) as redis_client:
+    with redis.Redis(host=settings.REDIS_HOST, password=settings.REDIS_PWD,db=9) as redis_client:
         redis_client.delete("ocr_type")
 
 

@@ -12,7 +12,7 @@ SK = "UWBPdP775VcqFa1MyNZN2jy9K5Fi6EUR"
 
 
 def get_access_token():
-    with redis.Redis(host=settings.REDIS_HOST, db=9) as redis_client:
+    with redis.Redis(host=settings.REDIS_HOST, password=settings.REDIS_PWD, db=9) as redis_client:
         res = redis_client.get("baidu_access_token")
         if res:
             return res

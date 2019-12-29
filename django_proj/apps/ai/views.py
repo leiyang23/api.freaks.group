@@ -105,7 +105,8 @@ def ocr(req):
         })
 
     # 使用 redis 来记录 接口调用量
-    with redis.Redis(host=settings.REDIS_HOST, db=9, decode_responses=True) as redis_client:
+    with redis.Redis(host=settings.REDIS_HOST, password=settings.REDIS_PWD, db=9,
+                     decode_responses=True) as redis_client:
         if redis_client.exists("ocr_type") == 0:
             num = {
                 "general_basic": 5000,

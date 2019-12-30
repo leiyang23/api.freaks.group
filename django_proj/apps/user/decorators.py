@@ -21,6 +21,7 @@ def auth_permission_required(perm):
                     raise PermissionDenied
             else:
                 try:
+                    # 请求头形如 header:{"Authorization":"token eyJ0eXAiOiJKVNiJ9.eyJifX0.RG62WjWO6AtUyTQ"}
                     auth = request.META.get('HTTP_AUTHORIZATION').split()
                 except AttributeError:
                     return JsonResponse({"code": 401, "message": "No authenticate header"})

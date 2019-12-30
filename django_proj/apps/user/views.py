@@ -9,6 +9,7 @@ from django.conf import settings
 
 from .forms import RegisterUserForm, LoginUserForm, RegisterEmailForm, RetrieveForm
 from celery_proj.tasks.common import send_email
+from .decorators import auth_permission_required
 
 UserModel = get_user_model()
 
@@ -110,6 +111,7 @@ def login(request):
 
 
 @require_POST
+@auth_permission_required("select_user")
 def retrieve_verify_email(request):
     """找回密码时验证邮箱"""
     email = request.POST.get("email", None)
@@ -121,7 +123,7 @@ def retrieve_verify_email(request):
             "msg": "邮箱不存在"
         })
 
-    send_active_email.delay(email)
+    send_email.delay(email)
     return JsonResponse({
         "status_code": 200,
         "msg": "已发送，请查收"
@@ -141,7 +143,7 @@ def retrieve(request):
     password = form.cleaned_data['password']
     code = form.cleaned_data['code']
 
-    r = redis.Redis(host=settings.REDIS_HOST, db=9)
+    r = redis.Redis(host=settings.REDIS_HOST, password=settings.REDIS_PWD, db=9)
     active_code = r.get(email)
 
     if active_code is None:

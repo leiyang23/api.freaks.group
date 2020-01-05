@@ -14,7 +14,7 @@ app.conf.beat_schedule = {
         "schedule": crontab(hour=0, minute=0)
     },
     'weather': {
-        "task": 'celery_proj.tasks.common.reset_api_times',
+        "task": 'celery_proj.weather.tasks.weather',
         "schedule": crontab(minute=0, hour="20"),
     },
 }

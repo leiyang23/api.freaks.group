@@ -1,8 +1,15 @@
+import time
+import re
+import platform
+from dataclasses import dataclass, field
+
+import psutil
+import paramiko
+import chardet
+
+
 def monitor_info():
     """返回主机监控信息"""
-    import psutil
-    import time
-    import platform
 
     # 操作系统信息
     res = {
@@ -49,6 +56,67 @@ def monitor_info():
     return res
 
 
+@dataclass(unsafe_hash=True)
+class SSH:
+    host: str
+    username: str
+    password: str
+    port: int = field(default=22, )
+    _trans: paramiko.Transport = None
+    _create_time: float = field(default=time.time(), hash=True)
+
+    def __post_init__(self):
+        self._trans = self._transport()
+
+    def _transport(self):
+        try:
+            self.port = int(self.port)
+            t = paramiko.Transport((self.host, self.port))
+            t.connect(username=self.username, password=self.password)
+            print("已连接")
+            return t
+        except Exception as e:
+            raise ConnectionError
+
+    def get_ssh(self):
+        ssh = paramiko.SSHClient()
+        ssh._transport = self._trans
+        return ssh
+
+    def get_shell(self):
+        ssh = self.get_ssh()
+        return ssh.invoke_shell()
+
+    @staticmethod
+    def cmd(s, command):
+        time.sleep(.3)
+        s.send(command + "\n")
+
+        resp = b""
+        while True:
+            time.sleep(.5)
+            ret = s.recv(1024)
+            resp += ret
+            if len(ret) < 1024:
+                break
+
+        char = chardet.detect(resp)
+        encoding = "utf-8" if char['encoding'] is None else char['encoding']
+        resp = resp.decode(encoding)
+
+        pat = "\033[[\d;]+m"  # 清除 彩色控制符
+        resp = re.sub(pat, '', resp)
+
+        return resp
+
+
 if __name__ == '__main__':
     '(read_count     =1621962, write_count=3127916, read_bytes=34730353152, write_bytes=111218112512, read_time=1575, write_time=1001)'
     print(monitor_info())
+
+    h = SSH("47.111.175.222", 22, "root", "1005931665Ecs")
+
+    sh = h.get_shell()
+    h.cmd(sh, "ls")
+    h.cmd(sh, "cd /home/")
+    h.cmd(sh, "ls ")

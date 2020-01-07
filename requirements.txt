@@ -1,3 +1,5 @@
+paramiko
+psutil
 amqp==2.5.1
 asgiref==3.2.3
 attrs==19.3.0

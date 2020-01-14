@@ -1,5 +1,6 @@
 from celery import Celery
 from celery.schedules import crontab
+from pytz import timezone
 
 from celery_proj import settings
 
@@ -19,5 +20,6 @@ app.conf.beat_schedule = {
     },
 }
 app.conf.enable_utc = False
+app.conf.timezone = timezone("Asia/Shanghai")
 if __name__ == '__main__':
     app.worker_main()

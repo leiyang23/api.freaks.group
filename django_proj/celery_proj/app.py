@@ -18,5 +18,6 @@ app.conf.beat_schedule = {
         "schedule": crontab(minute=0, hour="20"),
     },
 }
+app.conf.enable_utc = False
 if __name__ == '__main__':
     app.worker_main()

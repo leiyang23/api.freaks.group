@@ -67,9 +67,11 @@ def qiniu_data_statistic(request):
         headers = {
             "Authorization": "QBox " + access_token
         }
-
-        resp = requests.get(url, headers=headers).json()
-        res[i] = resp['datas'][-1]
+        try:
+            resp = requests.get(url, headers=headers, timeout=10).json()
+            res[i] = resp['datas'][-1]
+        except:
+            res[i] = 0
 
     return JsonResponse({
         "status_code": 200,

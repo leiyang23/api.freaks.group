@@ -1,12 +1,36 @@
 import jwt
+import time
 import datetime
 from django.contrib.auth.models import AbstractUser
 from django.conf import settings
 from django.db import models
 
+import requests
+
+
+def _gen_username():
+    return "user" + str(int(time.time()))
+
+
+def _gen_avatar():
+    try:
+        res = requests.get("http://api.btstu.cn/sjtx/api.php?lx=c1&format=json", timeout=10).json()
+        if res['code'] == "200":
+            image_url = res['imgurl']
+        else:
+            raise ValueError
+    except:
+        image_url = "http://qiniu1.freaks.group/37a984d01ed02791b77f8b922066c017.jpg"
+
+    return image_url
+
 
 class User(AbstractUser):
-    email = models.EmailField(unique=True)
+    username = models.CharField(max_length=50, unique=True, default=_gen_username, verbose_name="用户名")
+    email = models.EmailField(unique=True, verbose_name="邮箱")
+
+    gender = models.SmallIntegerField(verbose_name="性别", default=0, choices=((0, "未知"), (1, "男"), (2, "女")))
+    avatar = models.URLField(verbose_name="头像地址", default=_gen_avatar)
 
     @property
     def token(self):

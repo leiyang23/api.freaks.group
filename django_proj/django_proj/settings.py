@@ -7,7 +7,7 @@ sys.path.insert(1, os.path.join(BASE_DIR, 'celery_proj'))
 
 SECRET_KEY = 'a_)p&o@#%7@mh$$2ncu_^5tr&as&ap_04i5m*w$p#wdi%r=+m@'
 
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 

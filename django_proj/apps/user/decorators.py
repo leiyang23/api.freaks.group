@@ -31,6 +31,7 @@ def auth_permission_required(perm):
                     try:
                         dict = jwt.decode(auth[1], settings.SECRET_KEY, algorithms=['HS256'])
                         username = dict.get('data').get('username')
+                        request.username = username
                     except jwt.ExpiredSignatureError:
                         return JsonResponse({"status_code": 401, "msg": "Token expired"})
                     except jwt.InvalidTokenError:

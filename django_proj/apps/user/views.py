@@ -2,10 +2,13 @@ import redis
 import random
 
 from django.http import JsonResponse
-from django.views.decorators.http import require_POST
+from django.views.decorators.http import require_POST, require_GET, require_http_methods
 from django.contrib.auth.hashers import make_password, check_password
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Permission
+from django.contrib.contenttypes.models import ContentType
 from django.conf import settings
+from django.db.models import Q
 
 from .forms import RegisterUserForm, LoginUserForm, RegisterEmailForm, RetrieveForm
 from celery_proj.tasks.common import send_email
@@ -14,7 +17,6 @@ from .decorators import auth_permission_required
 UserModel = get_user_model()
 
 
-@require_POST
 def register_email_code(request):
     """注册时发送邮箱激活码"""
     form = RegisterEmailForm(request.POST)
@@ -29,7 +31,7 @@ def register_email_code(request):
     subject = "邮箱验证"
     code = ''.join(random.choices('0123456789', k=4))
     message = f"激活码：{code}，15分钟内有效。"
-    send_email.delay([email],subject,message)
+    send_email.delay([email], subject, message)
 
     r = redis.Redis(host=settings.REDIS_HOST, db=9)
     r.set(email, code, ex=60 * 15)
@@ -40,7 +42,7 @@ def register_email_code(request):
     })
 
 
-@require_POST
+@require_http_methods(["POST", "OPTIONS"])
 def register(request):
     """注册"""
     form = RegisterUserForm(request.POST)
@@ -50,7 +52,6 @@ def register(request):
             "msg": form.errors.as_json()
         })
 
-    username = form.cleaned_data['username']
     password = make_password(form.cleaned_data['password'])
     email = form.cleaned_data['email']
     code = form.cleaned_data['code']
@@ -70,7 +71,11 @@ def register(request):
         })
     r.delete(email)
 
-    user = UserModel.objects.create(username=username, password=password, email=email)
+    user = UserModel.objects.create(password=password, email=email)
+    # 赋予查看默认权限
+    content_type = ContentType.objects.get_for_model(UserModel)
+    permission = Permission.objects.get(codename="select_user", content_type=content_type)
+    user.user_permissions.add(permission)
     return JsonResponse({
         "status_code": 200,
         "msg": "register succeed",
@@ -78,7 +83,7 @@ def register(request):
     })
 
 
-@require_POST
+@require_http_methods(['POST', 'OPTIONS'])
 def login(request):
     """登陆"""
     form = LoginUserForm(request.POST)
@@ -88,10 +93,10 @@ def login(request):
             "msg": form.errors.as_json()
         })
 
-    username = form.cleaned_data['username']
+    account = form.cleaned_data['account']
     password = form.cleaned_data['password']
     try:
-        user = UserModel.objects.get(username=username)
+        user = UserModel.objects.get(Q(username=account) | Q(email=account))
     except UserModel.DoesNotExist:
         return JsonResponse({
             "status_code": 400,
@@ -110,7 +115,7 @@ def login(request):
     })
 
 
-@require_POST
+@require_http_methods(["POST", "OPTIONS"])
 @auth_permission_required("select_user")
 def retrieve_verify_email(request):
     """找回密码时验证邮箱"""
@@ -165,4 +170,16 @@ def retrieve(request):
         "status_code": 200,
         "msg": "retrieve succeed",
         "token": user.token
+    })
+
+
+@auth_permission_required("user.select_user")
+def get_info(req):
+    username = req.username
+    res = list(UserModel.objects.filter(username=username).values())[0]
+    del res["password"]
+
+    return JsonResponse({
+        "status_code": 200,
+        "data": res
     })

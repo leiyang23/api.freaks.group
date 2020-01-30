@@ -21,12 +21,12 @@ class RegisterUserForm(ModelForm):
 
     class Meta:
         model = User
-        fields = ["username", "password", "email"]
+        fields = ["password", "email"]
 
 
 class LoginUserForm(ModelForm):
     """登陆"""
-    username = forms.CharField(max_length=150, validators=[username_validator])
+    account = forms.CharField(required=True)
 
     class Meta:
         model = User

@@ -23,6 +23,7 @@ INSTALLED_APPS = [
     'imgur',
     'monitor',
     "ai",
+    "weather",
 ]
 
 MIDDLEWARE = [

@@ -48,6 +48,8 @@ class User(AbstractUser):
         return token.decode("utf-8")
 
     class Meta:
+        verbose_name = "成员"
+        verbose_name_plural = verbose_name
         default_permissions = ()
 
         permissions = (

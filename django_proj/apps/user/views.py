@@ -33,7 +33,7 @@ def register_email_code(request):
     message = f"激活码：{code}，15分钟内有效。"
     send_email.delay([email], subject, message)
 
-    r = redis.Redis(host=settings.REDIS_HOST, db=9)
+    r = redis.Redis(host=settings.REDIS_HOST, password=settings.REDIS_PWD, db=9)
     r.set(email, code, ex=60 * 15)
 
     return JsonResponse({
@@ -56,7 +56,7 @@ def register(request):
     email = form.cleaned_data['email']
     code = form.cleaned_data['code']
 
-    r = redis.Redis(host=settings.REDIS_HOST, db=9)
+    r = redis.Redis(host=settings.REDIS_HOST, password=settings.REDIS_PWD, db=9)
     active_code = r.get(email)
 
     if active_code is None:

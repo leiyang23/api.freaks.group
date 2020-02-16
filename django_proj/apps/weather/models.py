@@ -11,3 +11,7 @@ class WeatherTipList(models.Model):
     address = models.CharField(max_length=100, verbose_name="天气地址")
 
     user = models.ForeignKey(UserModel, on_delete=models.CASCADE, to_field="username", verbose_name="用户")
+
+    class Meta:
+        verbose_name = "天气提醒业务表"
+        verbose_name_plural = verbose_name

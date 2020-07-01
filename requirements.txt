@@ -1,3 +1,4 @@
+apscheduler
 paramiko
 psutil
 amqp==2.5.1

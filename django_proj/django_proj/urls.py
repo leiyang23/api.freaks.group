@@ -16,4 +16,5 @@ urlpatterns = [
     path('monitor/', include('monitor.urls')),
     path('ai/', include('ai.urls')),
     path('weather/', include('weather.urls')),
+    path('spy/', include('spy.urls')),
 ]

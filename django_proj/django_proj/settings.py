@@ -24,6 +24,7 @@ INSTALLED_APPS = [
     'monitor',
     "ai",
     "weather",
+    "spy",
 ]
 
 MIDDLEWARE = [
@@ -109,3 +110,10 @@ REDIS_PWD = "fuckyou!"
 
 # Channels 配置
 ASGI_APPLICATION = "django_proj.routing.application"
+
+SPY_REDIS = {
+    "host": "47.111.175.222",
+    "password": "fuckyou!",
+    "port": 6379,
+    "db": 12
+}

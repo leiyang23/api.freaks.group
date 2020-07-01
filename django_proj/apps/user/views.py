@@ -23,7 +23,7 @@ def register_email_code(request):
     if not form.is_valid():
         return JsonResponse({
             "status_code": 400,
-            "msg": form.errors.as_json()
+            "msg": form.errors.as_text()
         })
     email = form.cleaned_data['email']
 

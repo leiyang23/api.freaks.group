@@ -5,7 +5,7 @@ celery 应用只能从此读取配置文件，读取不到 celery_proj 以外的
 """
 import logging
 
-DEBUG = False
+DEBUG = True
 
 REDIS_HOST = '127.0.0.1' if DEBUG else '47.111.175.222'
 REDIS_PWD = "" if DEBUG else "fuckyou!"

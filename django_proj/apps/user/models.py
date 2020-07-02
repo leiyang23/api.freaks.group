@@ -32,6 +32,8 @@ class User(AbstractUser):
     gender = models.SmallIntegerField(verbose_name="性别", default=0, choices=((0, "未知"), (1, "男"), (2, "女")))
     avatar = models.URLField(verbose_name="头像地址", default=_gen_avatar)
 
+    msg_num = models.SmallIntegerField("未读消息", default=0)
+
     @property
     def token(self):
         return self._generate_token()
@@ -57,3 +59,25 @@ class User(AbstractUser):
             ("change_user", "修改用户"),
             ("delete_user", "删除用户"),
         )
+
+
+class SysMessage(models.Model):
+    """ 系统（全员）消息 """
+    title = models.CharField("标题", max_length=100)
+    content = models.TextField("消息内容", )
+
+    status = models.SmallIntegerField("消息状态", choices=((0, "未读"), (1, "已读"), (2, "已删除"), (3, "已撤销")))
+    create_time = models.DateTimeField("发布时间", auto_now_add=True)
+
+    user = models.ManyToManyField(User, )
+
+
+class SysRemind(models.Model):
+    """ 私人提醒 """
+    title = models.CharField("标题", max_length=100)
+    content = models.TextField("消息内容", )
+
+    status = models.SmallIntegerField("消息状态", choices=((0, "未读"), (1, "已读"), (2, "已删除"), (3, "已撤销")))
+    create_time = models.DateTimeField("发布时间", auto_now_add=True)
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)

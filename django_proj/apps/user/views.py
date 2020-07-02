@@ -8,11 +8,13 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
 from django.conf import settings
-from django.db.models import Q
+from django.db.models import Q, F
+from django.core.exceptions import ObjectDoesNotExist
 
 from .forms import RegisterUserForm, LoginUserForm, RegisterEmailForm, RetrieveForm
 from celery_proj.tasks.common import send_email
 from .decorators import auth_permission_required
+from .models import SysRemind
 
 UserModel = get_user_model()
 
@@ -71,15 +73,19 @@ def register(request):
         })
     r.delete(email)
 
-    user = UserModel.objects.create(password=password, email=email)
+    user = UserModel.objects.create(password=password, email=email, msg_num=1)
+
     # 赋予查看默认权限
     content_type = ContentType.objects.get_for_model(UserModel)
     permission = Permission.objects.get(codename="select_user", content_type=content_type)
     user.user_permissions.add(permission)
+
+    SysRemind.objects.create(title="欢迎新伙伴", content="欢迎加入我们，这是测试内容", status=0, user_id=user.pk)
     return JsonResponse({
         "status_code": 200,
         "msg": "register succeed",
-        "token": user.token
+        "token": user.token,
+        "msg_num": 1
     })
 
 
@@ -111,7 +117,8 @@ def login(request):
     return JsonResponse({
         "status_code": 200,
         "msg": "login succeed",
-        "token": user.token
+        "token": user.token,
+        "msg_num": user.msg_num
     })
 
 
@@ -183,3 +190,56 @@ def get_info(req):
         "status_code": 200,
         "data": res
     })
+
+
+@auth_permission_required("user.select_user")
+def get_msgs(req):
+    user = req.username
+    res = list(SysRemind.objects.filter(user__username=user, status=0).values())
+    return JsonResponse({
+        "code": 200,
+        "data": res,
+        "msg_num": len(res)
+    })
+
+
+@auth_permission_required("user.select_user")
+def del_msg(req, msg_id):
+    msg = SysRemind.objects.filter(pk=msg_id)
+    if len(msg) == 1:
+        user = UserModel.objects.get(username=req.username)
+        user.msg_num -= 1
+        user.save()
+
+        return JsonResponse({
+            "code": 200,
+            "msg": "delete success"
+        })
+    else:
+        return JsonResponse({
+            "code": 400,
+            "msg": f"not found msg_id {msg_id}"
+        })
+
+
+@auth_permission_required("user.select_user")
+def read_msg(req, msg_id):
+    try:
+        msg = SysRemind.objects.get(pk=msg_id)
+        msg.status = 1
+        msg.save()
+
+        user = UserModel.objects.get(username=req.username)
+        user.msg_num -= 1
+        user.save()
+
+        return JsonResponse({
+            "code": 200,
+            "msg": "update status"
+        })
+    except ObjectDoesNotExist:
+        return JsonResponse({
+            "code": 400,
+            "msg": f"{msg_id} or {req.username} doesn't exist"
+        })
+

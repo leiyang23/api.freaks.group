@@ -105,8 +105,8 @@ EMAIL_HOST_PASSWORD = '1005931665sqm'  # 密码
 DEFAULT_FROM_EMAIL = SERVER_EMAIL = EMAIL_HOST_USER
 
 # redis
-REDIS_HOST = '127.0.0.1' if DEBUG  else '47.111.175.222'
-REDIS_PWD = "fuckyou!"
+REDIS_HOST = '127.0.0.1' if DEBUG else '47.111.175.222'
+REDIS_PWD = None if DEBUG else "fuckyou!"
 
 # Channels 配置
 ASGI_APPLICATION = "django_proj.routing.application"

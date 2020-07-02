@@ -9,4 +9,7 @@ urlpatterns = [
     path("retrieve_verify_email", views.retrieve_verify_email),
 
     path("info", views.get_info),
+    path("msg/read/<int:msg_id>", views.read_msg),
+    path("msg/del/<int:msg_id>", views.del_msg),
+    path("msgs", views.get_msgs),
 ]

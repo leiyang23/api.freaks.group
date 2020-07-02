@@ -1,4 +1,5 @@
 import time
+from datetime import datetime
 import platform
 
 import psutil
@@ -84,7 +85,7 @@ def realtime(interval=10):
         "cpu_percent": cpu_percent,
         "virtual_memory": virtual_memory,
         "load": load,
-        "time": int(time.time())
+        "time": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     }
 
 
